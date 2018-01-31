@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WebScockets 101</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Bangers|Kaushan+Script|Permanent+Marker|Righteous|Satisfy" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet"/>
+</head>
+<body class="image-head">
+    <ul>
+        <li>
+            <h1 style="color:antiquewhite;font-family: 'Kaushan Script', cursive;font-size:50px;">
+                    Secret Chat
+            </h1>
+        </li>
+        <li style="float:right;margin:5px;">
+            <button id="clear" class="btn">Clear</button>
+        </li>
+        <li style="float:right;margin:5px;">
+            <button id="pri" class="btn" onclick="PopUp()">Private</button>
+        </li>
+    </ul>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 col-sm-12">
+                
+                <!--div class="text-center">
+                    <button id="clear" class="btn btn-danger">Clear</button>
+                    <button id="pri" class="btn btn-danger" onclick="PopUp()">Private</button>
+                </div-->
+                <div id="status"></div>
+                <div id="chat">
+                    <input type="text" id="username" class="form-control" placeholder="Enter name...">
+                    <br>
+                    <div class="card">
+                        <div id="messages" class="card-block">
+                        </div>
+                    </div>
+                    <br>
+                    <textarea id="textarea" class="form-control" placeholder="Enter message..."></textarea>
+                </div>
+                <center>
+                <div id="popUp" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Online chats</h2>
+                        <form>
+                            <div class="form-group">
+                                <label>Chat name:<input id="cname" type="text" class="form-control"/></label>
+                                <label>Key:<input id="key" type="password" class="form-control"/></label>
+                            </div>
+                        </form>
+                        <div id="chat-names">
+                        </div>
+                        <div class="modal-footer">
+                            <button id="new" class="btn btn-danger">new chat</button>
+                        </div>
+                    </div>
+                </div>
+                </center>
+            </div>
+        </div>
+    </div>
+    <script>
+        var modal = document.getElementById('popUp');
+        function PopUp(){
+            modal.style.display="block";
+            console.log("function initiated")
+        }
+        var span = document.getElementsByClassName("close")[0];
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+    <script src="./chat.js"></script>
+</body>
+</html>
