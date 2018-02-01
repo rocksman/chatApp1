@@ -26,7 +26,7 @@
         }
     }
 
-    var socket = io.connect('http://127.0.0.1:4200');
+    var socket = io.connect('https://stark-depths-16759.herokuapp.com');
 
     if(socket !== undefined){
         console.log('Connected to socket...');
