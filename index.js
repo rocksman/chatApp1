@@ -10,7 +10,7 @@ var server = app.listen(port,function(){
 app.use(express.static('public'));
 
 var client = socketi(server);
-mongo.connect('mongodb://127.0.0.1:27017/chatapp', function(err, db){/*mongodb://admin:admin@ds121238.mlab.com:21238/chatapp*/
+mongo.connect('mongodb://admin:admin@ds121238.mlab.com:21238/chatapp', function(err, db){/*mongodb://127.0.0.1:27017/chatapp*/
     if(err){
         throw err;
     }
