@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>WebScockets 101</title>
+    <title>Mystiko</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -10,11 +10,11 @@
         <link href="https://fonts.googleapis.com/css?family=Bangers|Kaushan+Script|Permanent+Marker|Righteous|Satisfy" rel="stylesheet">
         <link href="styles.css" rel="stylesheet"/>
 </head>
-<body class="image-head">
+<body onload="unamePop()">
     <ul>
         <li>
-            <h1 style="color:antiquewhite;font-family: 'Kaushan Script', cursive;font-size:50px;">
-                    Secret Chat
+            <h1 style="color:white;font-family: 'Kaushan Script', cursive;font-size:50px;">
+                    Mystikó
             </h1>
         </li>
         <li style="float:right;margin:5px;">
@@ -34,30 +34,76 @@
                 </div-->
                 <div id="status"></div>
                 <div id="chat">
-                    <input type="text" id="username" class="form-control" placeholder="Enter name...">
                     <br>
-                    <div class="card">
+                    <div class="card" style="background-color: rgba(255,255,255,0.3)">
                         <div id="messages" class="card-block">
+                        </div>
+                        <div id="pvmessages" style="display:none;" class="card-block">
                         </div>
                     </div>
                     <br>
                     <textarea id="textarea" class="form-control" placeholder="Enter message..."></textarea>
+                    <textarea id="textarea1" class="form-control" style="display:none;" placeholder="Enter message..."></textarea>
                 </div>
                 <center>
                 <div id="popUp" class="modal">
                     <div class="modal-content">
                         <span class="close">&times;</span>
-                        <h2>Online chats</h2>
+                        <h2 style="color:#22646e">Online chats</h2>
                         <form>
-                            <div class="form-group">
-                                <label>Chat name:<input id="cname" type="text" class="form-control"/></label>
+                            <div class="form-group" id="chatNames" style="color:#22646e">
+                                <label >Chat name:<input id="cname" type="text" class="form-control"/></label>
                                 <label>Key:<input id="key" type="password" class="form-control"/></label>
                             </div>
+                            <div class="form-group" id="chatKey">
+                                <label style="color:#22646e">Key:<input id="cKey" type="password" class="form-control"/></label>
+                            </div>
                         </form>
-                        <div id="chat-names">
+                        <div id="chat-n">
                         </div>
                         <div class="modal-footer">
-                            <button id="new" class="btn btn-danger">new chat</button>
+                            <button id="new" class="btn btn1">new chat</button>
+                            <button id="cnct" class="btn btn1">connect</button>
+                        </div>
+                    </div>
+                </div>
+                </center>
+                <center>
+                <div id="namePopUp" class="modal">
+                    <div class="modal-content1">
+                        <div id="login">
+                            <div id="logo-side">
+                                <img src="login.png" height="140px" width="140px" style="border-radius:50%;line-height:10px;"/>
+                            </div>
+                            <br/>
+                            <div id="form-side">
+                                <form>
+                                    <div class="form-group">
+                                        <label style="color:rgba(255,255,255,0.5)"><input type="text" id="username" placeholder="Username..." style="color:#22646e" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username...'"/></label><br/>
+                                        <label style="color:rgba(255,255,255,0.5)"><input type="password" id="pword" placeholder="Password..." style="color:#22646e" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password...'"/></label>
+                                        <br/>
+                                        <a href="" style="font-size:12px;text-align:right;"id="reg-link">Don't have an account? Register</a> 
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="register-side">
+                            <div id="logo-side">
+                                <img src="login.png" height="140px" width="140px" style="border-radius:50%;line-height:10px;"/>
+                            </div>
+                            <br/>
+                            <div id="form-side">
+                                <form>
+                                    <div class="form-group">
+                                        <label style="color:rgba(255,255,255,0.5)"><input type="text" id="regname" placeholder="Username..." style="color:#22646e" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username...'"/></label><br/>
+                                        <label style="color:rgba(255,255,255,0.5)"><input type="password" id="regpword" placeholder="Password..." style="color:#22646e" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password...'"/></label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="start" class="btn btn1">Login</button>
+                            <button id="registerBtn" class="btn btn1">Register</button>
                         </div>
                     </div>
                 </div>
@@ -66,10 +112,13 @@
         </div>
     </div>
     <script>
+        var nameModal = document.getElementById('namePopUp');
         var modal = document.getElementById('popUp');
         function PopUp(){
             modal.style.display="block";
-            console.log("function initiated")
+        }
+        function unamePop(){
+            nameModal.style.display="block";
         }
         var span = document.getElementsByClassName("close")[0];
         // When the user clicks on <span> (x), close the modal

@@ -10,29 +10,28 @@ var server = app.listen(port,function(){
 app.use(express.static('public'));
 
 var client = socketi(server);
-mongo.connect('mongodb://admin:admin@ds121238.mlab.com:21238/chatapp', function(err, db){
+mongo.connect('mongodb://127.0.0.1:27017/chatapp', function(err, db){/*mongodb://admin:admin@ds121238.mlab.com:21238/chatapp*/
     if(err){
         throw err;
     }
     console.log('MongoDB connected!');
 
-
-
     client.on('connection',function(socket){
         console.log("Made connection socket!");
         let chat = db.collection('chats');
         let chatCol = db.collection('chatCol');
+        let users = db.collection('users');
         sendStatus = function(s){
             socket.emit('status',s);
         }
         socket.on('newChat',function(data){
-            let chatName= data.chatName;
+            let cname= data.cname;
             let key= data.key;
-            if(chatName == ''){
+            if(cname == ''){
                 sendStatus('Invalid data');
             }
             else{
-                chatCol.insert({cname: chatName, key: key},function(){
+                chatCol.insert({cname: cname, key: key},function(){
                     client.emit('chatNames',[data]);
                     sendStatus({
                         message:'Chat Added'
@@ -71,12 +70,58 @@ mongo.connect('mongodb://admin:admin@ds121238.mlab.com:21238/chatapp', function(
                 });
             }
         });
+        socket.on('vInput', function(data){
+            let varc = db.collection(data.chatname);
+            let name = data.name;
+            let message = data.message;
 
+            if(name == '' || message == ''){
+                sendStatus('Please enter a name and a message!');
+            }
+            else{
+                varc.insert({name: name, message:message},function(){
+                    client.emit('vChat-mes',[data]);
+
+                    sendStatus({
+                        message: 'Message sent',
+                        clear: true
+                    });
+                });
+            }
+        });
+        socket.on('register',function(data){
+            users.insert({uname: data.rname, password:data.rpass});
+        });
+        socket.on('login',function(data){
+            users.find().toArray(function(err,res){
+                if(err){
+                    throw err;
+                }
+                socket.emit('verify-user', res);
+            });
+        });
         socket.on('typing',function(data){
             socket.broadcast.emit('typing',data);
         });
-
+        socket.on('chat-room',function(data){
+            chatCol.find().toArray(function(err,res){
+                if(err){
+                    throw err;
+                }
+                socket.emit('chat-names1', res);
+            });
+        });
+        socket.on('newChat-room',function(data){
+            let varc = db.collection(data);
+            varc.find().limit(100).sort({_id:1}).toArray(function(err,res){
+                if(err){
+                    throw err;
+                }
+                socket.emit('vChat-mes',res);
+            });
+        });
         socket.on('clear',function(data){
+            chatCol.remove();
             chat.remove({},function(){
                 socket.emit('cleared');
             });
