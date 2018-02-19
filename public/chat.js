@@ -34,8 +34,8 @@
         }
     }
 
-    /*var socket = io.connect('https://stark-depths-16759.herokuapp.com');*/
-    var socket = io.connect('http://localhost:4200'); 
+    var socket = io.connect('https://fathomless-taiga-64127.herokuapp.com/');
+    /*var socket = io.connect('http://localhost:4200');*/ 
 
     if(socket !== undefined){
         console.log('Connected to socket...');
